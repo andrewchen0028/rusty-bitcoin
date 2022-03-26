@@ -1,3 +1,4 @@
-pub mod messaging;
-pub mod mining;
+pub mod client;
+pub mod miner;
+pub mod server;
 pub mod util;

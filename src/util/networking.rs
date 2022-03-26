@@ -2,6 +2,7 @@ use std::net::{Ipv4Addr, SocketAddrV4};
 
 use super::constants::RBTC_PORT;
 
+/// Create a SocketAddrV4 from the given node number.
 pub fn addr_from_node_number(node_number: u8) -> SocketAddrV4 {
   SocketAddrV4::new(
     Ipv4Addr::new(
