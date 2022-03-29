@@ -1,4 +1,2 @@
-pub mod client;
-pub mod miner;
-pub mod server;
+pub mod macros;
 pub mod util;
