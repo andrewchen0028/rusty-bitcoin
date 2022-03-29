@@ -8,6 +8,6 @@ macro_rules! log {
       file!(),
       line!(),
       column!(),
-      format_args!($($arg)*));
+      format_args!($($arg)*))
   }
 }

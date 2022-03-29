@@ -1,60 +1,41 @@
-use std::{io::Result, process, thread};
+use std::{env::args, io::Result, net::Ipv4Addr, thread::spawn};
 
 use rbtc::{
-  client::thread::start_client_thread, miner::thread::start_miner_thread,
-  server::thread::start_server_thread,
+  inbound::start_inbound,
+  log,
+  mining::start_mining,
+  outbound::start_outbound,
+  util::{join_thread, parse_args_to_local_ip_addr},
 };
 
 /// Start and join all execution threads.
-fn start_threads(node_number: u8) {
+fn start_and_join_threads(local_ip_addr: Ipv4Addr) -> Result<()> {
+  log!(
+    "\tStarting and joining threads with local IP address {}",
+    local_ip_addr
+  );
   // Start threads.
-  let client_thread = thread::spawn(move || start_client_thread(&node_number));
-  let server_thread = thread::spawn(move || start_server_thread(&node_number));
-  let miner_thread = thread::spawn(move || start_miner_thread(&node_number));
+  let thread_inbound = spawn(move || start_inbound(&local_ip_addr));
+  let thread_mining = spawn(move || start_mining(&local_ip_addr));
+  let thread_outbound = spawn(move || start_outbound(&local_ip_addr));
 
   // Join threads.
-  match client_thread.join() {
-    Ok(_) => {},
-    Err(error) => {
-      eprintln!("ERROR:\tcould not join client thread, {:?}", error)
-    },
-  }
-  match server_thread.join() {
-    Ok(_) => {},
-    Err(error) => {
-      eprintln!("ERROR:\tcould not join server thread, {:?}", error)
-    },
-  }
-  match miner_thread.join() {
-    Ok(_) => {},
-    Err(error) => {
-      eprintln!("ERROR:\tcould not join miner thread, {:?}", error)
-    },
-  }
+  join_thread(thread_inbound)?;
+  join_thread(thread_mining)?;
+  join_thread(thread_outbound)?;
+  Ok(())
 }
 
 /// Parse error-checked arguments and spawn node threads.
 fn main() -> Result<()> {
   // Collect arguments into string vector.
-  let args: Vec<String> = std::env::args().collect();
+  let args: Vec<String> = args().collect();
 
-  // Check for expected number of arguments after `main` (one). Parse argument
-  // to node number (u8) if possible and start execution threads. If argument
-  // cannot be parsed to u8, exit with error.
-  match args.len() - 1 {
-    1 => match args[1].parse::<u8>() {
-      Ok(node_number) => {
-        start_threads(node_number);
-      },
-      Err(error) => {
-        eprintln!("ERROR:\tcould not parse input to u8, {}", error);
-        process::exit(1);
-      },
-    },
-    num => {
-      eprintln!("ERROR:\texpected one argument after `main`, found {}", num);
-      process::exit(1);
-    },
-  }
+  // Parse the arguments for the desired local IP address.
+  let local_ip_addr = parse_args_to_local_ip_addr(args);
+
+  // Start and join all execution threads using the local IP address.
+  start_and_join_threads(local_ip_addr)?;
+
   Ok(())
 }
