@@ -1,11 +1,16 @@
 use std::{
-  io::{Read, Result},
+  io::Read,
   net::{Ipv4Addr, SocketAddrV4, TcpListener},
 };
 
-use crate::{constants::{MSG_SIZE, RBTC_PORT}, log};
+use crate::{
+  log,
+  util::constants::{MSG_SIZE, RBTC_PORT},
+  util::errors::Result,
+};
 
 /// Start listening for messages.
+/// # REWRITE
 pub fn start_inbound(local_ip_addr: &Ipv4Addr) -> Result<()> {
   // Get local socket address from provided local IP address.
   let local_socket_addr = SocketAddrV4::new(*local_ip_addr, RBTC_PORT);
@@ -15,6 +20,9 @@ pub fn start_inbound(local_ip_addr: &Ipv4Addr) -> Result<()> {
 
   // Continuously handle incoming streams.
   for stream_result in listener.incoming() {
+    // Log progress.
+    log!("\tEntered output loop");
+
     // Extract stream and read to buffer.
     let mut stream = stream_result?;
     let mut buf = [0u8; MSG_SIZE];
