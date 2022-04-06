@@ -5,6 +5,7 @@ use crate::util::{self, types::addr};
 /// Wrapper error types for the ```ui``` module.
 #[derive(Debug)]
 pub enum Error {
+  /// Wrapper error type for ```addr::Error```.
   AddrError(addr::Error),
 }
 
@@ -21,3 +22,5 @@ impl Display for Error {
     }
   }
 }
+
+impl std::error::Error for Error {}

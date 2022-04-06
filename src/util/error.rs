@@ -3,7 +3,7 @@ use super::types;
 /// Wrapper error types for the ```util``` module.
 #[derive(Debug)]
 pub enum Error {
-  /// Wrapper for ```ty[e``` module errors.
+  /// Wrapper for ```type``` module errors.
   TypeError(types::error::Error),
 }
 

@@ -2,7 +2,6 @@ use clap::{Parser, Subcommand};
 
 use crate::util::types::{addr::Addr, units::Unit};
 
-/// # REWRITE
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
 #[clap(propagate_version = true)]

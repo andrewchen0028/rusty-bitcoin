@@ -12,6 +12,7 @@ fn main() -> Result<()> {
   let ui_thread = spawn(start_ui);
 
   // TODO: Figure out wtf this "panic::resume_unwind()" thing does.
+  // TODO: Make threads not compete for stdout space.
   match mining_thread.join() {
     Ok(_) => println!("Exited mining thread"),
     Err(err) => panic::resume_unwind(err),

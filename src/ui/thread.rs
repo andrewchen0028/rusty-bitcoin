@@ -3,6 +3,7 @@ use std::{ffi::OsString, io::stdin};
 use clap::StructOpt;
 
 use crate::{
+  logln,
   ui::{
     cli::{Cli, Commands},
     error::Error,
@@ -14,9 +15,11 @@ use crate::{
 };
 
 /// Parse inputs from stdin to CLI.
+///
+/// TODO: TUI integration (https://crates.io/crates/tui).
 pub fn start_ui() -> Result<(), Error> {
-  // TODO: Loop exits on invalid input; make it suggest inputs and re-enter.
   loop {
+    logln!("--------------------");
     let mut buf = String::new();
     match stdin().read_line(&mut buf) {
       Ok(_) => {},
@@ -25,7 +28,14 @@ pub fn start_ui() -> Result<(), Error> {
         continue;
       },
     }
-    let cli = Cli::parse_from(string_to_args(&buf).iter());
+
+    let cli = match Cli::try_parse_from(string_to_args(&buf).iter()) {
+      Ok(cli) => cli,
+      Err(err) => {
+        println!("Failed to parse input to CLI: {}", err);
+        continue;
+      },
+    };
 
     match cli.command {
       Commands::Balance { addr } => {
