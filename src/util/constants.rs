@@ -1,6 +1,6 @@
 use std::{net::Ipv4Addr, ops::RangeInclusive};
 
-use crate::util::errors::{Error::InvalidNetworkIDByte, Result};
+use super::types::addr;
 
 /// Conversion factors from underlying currency (nanoRBTC) to other units.
 pub const NANO_FROM_NANO: f64 = 1e0;
@@ -32,28 +32,26 @@ pub const BOOTSTRAP_IP_ADDRS: [Ipv4Addr; BOOTSTRAP_COUNT] =
 pub const CONNECT_TIMEOUT_SECS: u64 = 10;
 
 /// The index of the network ID byte in an RBTC wallet.
-pub const WALLET_ADDR_INDEX_NETWORK_ID: usize = 0;
+pub const ADDR_INDEX_NETWORK_ID: usize = 0;
 
 /// The size of an RBTC wallet's underlying bytes.
-pub const WALLET_ADDR_SIZE_UNDERLYING: usize = 20;
+pub const ADDR_SIZE_UNDERLYING: usize = 20;
 
 /// The size of an RBTC wallet checksum, in bytes.
-pub const WALLET_ADDR_SIZE_CHECKSUM: usize = 4;
+pub const ADDR_SIZE_CHECKSUM: usize = 4;
 
 /// The size of an RBTC wallet address, in bytes.
-pub const WALLET_ADDR_SIZE: usize =
-  1 + WALLET_ADDR_SIZE_UNDERLYING + WALLET_ADDR_SIZE_CHECKSUM;
+pub const ADDR_SIZE: usize = 1 + ADDR_SIZE_UNDERLYING + ADDR_SIZE_CHECKSUM;
 
 /// The indices of the underlying bytes in an RBTC wallet.
-pub const WALLET_ADDR_RANGE_UNDERLYING: RangeInclusive<usize> =
-  RangeInclusive::new(1, WALLET_ADDR_SIZE_UNDERLYING);
+pub const ADDR_RANGE_UNDERLYING: RangeInclusive<usize> =
+  RangeInclusive::new(1, ADDR_SIZE_UNDERLYING);
 
 /// The indices of the checksum bytes in an RBTC wallet.
-pub const WALLET_ADDR_RANGE_CHECKSUM: RangeInclusive<usize> =
-  RangeInclusive::new(
-    WALLET_ADDR_SIZE_UNDERLYING,
-    WALLET_ADDR_SIZE_UNDERLYING + WALLET_ADDR_SIZE_CHECKSUM,
-  );
+pub const ADDR_RANGE_CHECKSUM: RangeInclusive<usize> = RangeInclusive::new(
+  ADDR_SIZE_UNDERLYING,
+  ADDR_SIZE_UNDERLYING + ADDR_SIZE_CHECKSUM,
+);
 
 /// The size of a RIPEMD-160 hash, in bytes.
 pub const RIPEMD160_HASH_SIZE: usize = 20;
@@ -72,11 +70,11 @@ pub enum NetworkID {
 
 impl NetworkID {
   /// Get a network ID from a given network ID byte.
-  pub fn new(network_id_byte: u8) -> Result<Self> {
+  pub fn new(network_id_byte: u8) -> Result<Self, addr::Error> {
     match network_id_byte {
       MAINNET_ID_BYTE => Ok(Self::Mainnet),
       TESTNET_ID_BYTE => Ok(Self::Testnet),
-      other => Err(Box::new(InvalidNetworkIDByte(other))),
+      byte => Err(addr::Error::InvalidNetworkID(byte)),
     }
   }
 

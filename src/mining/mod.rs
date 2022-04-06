@@ -1,1 +1,1 @@
-pub mod miner;
+pub mod thread;

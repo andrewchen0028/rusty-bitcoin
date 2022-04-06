@@ -6,12 +6,11 @@ use std::{
 use crate::{
   log,
   util::constants::{MSG_SIZE, RBTC_PORT},
-  util::errors::Result,
 };
 
 /// Start listening for messages.
 /// # REWRITE
-pub fn start_inbound(local_ip_addr: &Ipv4Addr) -> Result<()> {
+pub fn start_inbound(local_ip_addr: &Ipv4Addr) -> std::io::Result<()> {
   // Get local socket address from provided local IP address.
   let local_socket_addr = SocketAddrV4::new(*local_ip_addr, RBTC_PORT);
 
