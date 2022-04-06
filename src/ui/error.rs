@@ -1,12 +1,18 @@
 use std::fmt::Display;
 
-use crate::util::{self, types::addr};
+use crate::util;
 
 /// Wrapper error types for the ```ui``` module.
 #[derive(Debug)]
 pub enum Error {
-  /// Wrapper error type for ```addr::Error```.
-  AddrError(addr::Error),
+  /// Wrapper type for ```addr::Error```.
+  AddrError(util::types::addr::Error),
+
+  /// Wrapper type for ```amount::Error```.
+  AmountError(util::types::amount::Error),
+
+  /// Wrapper type for ```io::Error```.
+  IOError(std::io::Error),
 }
 
 impl From<util::types::addr::Error> for Error {
@@ -15,10 +21,24 @@ impl From<util::types::addr::Error> for Error {
   }
 }
 
+impl From<util::types::amount::Error> for Error {
+  fn from(err: util::types::amount::Error) -> Self {
+    Self::AmountError(err)
+  }
+}
+
+impl From<std::io::Error> for Error {
+  fn from(err: std::io::Error) -> Self {
+    Self::IOError(err)
+  }
+}
+
 impl Display for Error {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     match self {
       Error::AddrError(err) => write!(f, "{}", err),
+      Error::AmountError(err) => write!(f, "{}", err),
+      Error::IOError(err) => write!(f, "{}", err),
     }
   }
 }

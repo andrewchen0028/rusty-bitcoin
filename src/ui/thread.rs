@@ -3,7 +3,6 @@ use std::{ffi::OsString, io::stdin};
 use clap::StructOpt;
 
 use crate::{
-  logln,
   ui::{
     cli::{Cli, Commands},
     error::Error,
@@ -16,47 +15,34 @@ use crate::{
 
 /// Parse inputs from stdin to CLI.
 ///
-/// TODO: TUI integration (https://crates.io/crates/tui).
+/// TODO: Comminucate with networking thread.
+///
+/// TODO: TUI integration (https://crates.io/crates/tui) & CLI coloring.
 pub fn start_ui() -> Result<(), Error> {
   loop {
-    logln!("--------------------");
+    println!();
     let mut buf = String::new();
-    match stdin().read_line(&mut buf) {
-      Ok(_) => {},
-      Err(err) => {
-        println!("Failed to read line: {}", err);
-        continue;
-      },
-    }
-
+    stdin().read_line(&mut buf)?;
     let cli = match Cli::try_parse_from(string_to_args(&buf).iter()) {
       Ok(cli) => cli,
       Err(err) => {
-        println!("Failed to parse input to CLI: {}", err);
+        println!("{}", err);
         continue;
       },
     };
 
     match cli.command {
       Commands::Balance { addr } => {
-        println!("Getting balance of {}", addr);
+        println!("Getting balance of wallet {}\n", addr)
       },
-      Commands::NewWallet {} => {
-        let addr = Addr::new(NetworkID::Mainnet)?;
-        println!("Created new wallet with address {}", addr);
+      Commands::NewWallet => {
+        println!("Created new wallet: {}\n", Addr::new(NetworkID::Mainnet)?)
       },
       Commands::Send { amount, unit, recipient } => {
-        let amount = match Amount::new(amount, unit) {
-          Ok(amount) => amount,
-          Err(err) => {
-            println!("{}", err);
-            continue;
-          },
-        };
-        println!("Sending {} to {}", amount, recipient);
+        println!("Sending {} to {}\n", Amount::new(amount, unit)?, recipient);
       },
       Commands::Shutdown => {
-        todo!()
+        println!("TODO: Triggering graceful shutdown of this RBTC client\n")
       },
     }
   }
