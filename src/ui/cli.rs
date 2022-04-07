@@ -10,7 +10,7 @@ pub struct Cli {
   pub command: Commands,
 }
 
-#[derive(Subcommand)]
+#[derive(Debug, Subcommand)]
 pub enum Commands {
   /// Get the RBTC balance of the specified wallet address.
   Balance { addr: Addr },
@@ -25,6 +25,6 @@ pub enum Commands {
     recipient: Addr,
   },
 
-  /// Trigger a (TODO) graceful shutdown of this RBTC client.
+  /// TODO: Trigger a graceful shutdown of this RBTC client.
   Shutdown,
 }

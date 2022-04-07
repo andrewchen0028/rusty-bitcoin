@@ -13,6 +13,7 @@ use crate::util::{
 
 /// A 25-byte RBTC wallet address, comprised of a one-byte network ID, a 20-byte
 /// address, and a 4-byte checksum.
+#[derive(Debug)]
 pub struct Addr {
   /// 25-byte wallet address, comprised of network ID byte (1), address (20),
   /// checksum (4).

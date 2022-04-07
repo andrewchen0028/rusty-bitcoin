@@ -26,7 +26,7 @@ impl Amount {
   /// let one_thousand = Amount::new(1.0, Unit::kRBTC)?;
   /// assert_eq!(one_thousand.underlying, 1e9 * 1e3);
   /// ```
-  pub fn new(amount: f64, unit: Unit) -> Result<Self, Error> {
+  pub fn new(amount: f64, unit: &Unit) -> Result<Self, Error> {
     let factor = match unit {
       Unit::nRBTC => NANO_FROM_NANO,
       Unit::uRBTC => NANO_FROM_MICRO,
