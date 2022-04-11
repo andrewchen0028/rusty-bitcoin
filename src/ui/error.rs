@@ -2,19 +2,19 @@ use std::fmt::Display;
 
 use crate::{ui, util};
 
-/// Wrapper error types for the ```ui``` module.
+/// Wrapper error types for the `ui` module.
 #[derive(Debug)]
 pub enum Error {
-  /// Wrapper type for ```addr::Error```.
+  /// Wrapper type for `addr::Error`.
   AddrError(util::types::addr::Error),
 
-  /// Wrapper type for ```amount::Error```.
+  /// Wrapper type for `amount::Error`.
   AmountError(util::types::amount::Error),
 
-  /// Wrapper type for ```io::Error```.
+  /// Wrapper type for `io::Error`.
   IOError(std::io::Error),
 
-  /// Wrapper type for ```SendError<Commands>```.
+  /// Wrapper type for `SendError<Commands>`.
   SendError(async_std::channel::SendError<ui::cli::Commands>),
 }
 

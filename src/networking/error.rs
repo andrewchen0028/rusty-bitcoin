@@ -1,9 +1,9 @@
 use std::fmt::Display;
 
-/// Wrapper error types for the ```networking``` module.
+/// Wrapper error types for the `networking` module.
 #[derive(Debug)]
 pub enum Error {
-  /// Wrapper type for ```RecvError```.
+  /// Wrapper type for `RecvError`.
   RecvError(async_std::channel::RecvError),
 }
 

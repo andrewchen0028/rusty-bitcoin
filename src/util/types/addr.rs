@@ -62,7 +62,7 @@ impl Addr {
 
   /// Get the network ID of this wallet address.
   ///
-  /// TODO: Make this exhaustive against the variants of ```NetworkID```.
+  /// TODO: Make this exhaustive against the variants of `NetworkID`.
   pub fn network_id(&self) -> Result<NetworkID, Error> {
     match self.bytes[ADDR_INDEX_NETWORK_ID] {
       MAINNET_ID_BYTE => Ok(NetworkID::Mainnet),
@@ -110,13 +110,13 @@ impl std::str::FromStr for Addr {
   }
 }
 
-/// The custom error type for ```Addr```.
+/// The custom error type for `Addr`.
 #[derive(Debug)]
 pub enum Error {
   /// Indicates an error decoding a string using Base58.
   Base58DecodeError(bs58::decode::Error),
 
-  /// Indicates an error converting a ```Vec<u8>``` into an array.
+  /// Indicates an error converting a `Vec<u8>` into an array.
   IntoArrayError(Vec<u8>),
 
   /// Indicates an invalid network ID byte.

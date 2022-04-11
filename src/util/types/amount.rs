@@ -16,7 +16,7 @@ pub struct Amount {
 }
 
 impl Amount {
-  /// Create a new ```Amount``` from an ```f64``` and a ```Unit```.
+  /// Create a new `Amount` from an `f64` and a `Unit`.
   ///
   /// # Examples
   /// ```
@@ -66,7 +66,7 @@ impl std::fmt::Display for Amount {
   }
 }
 
-/// Error type for ```Amount``` objects.
+/// Error type for `Amount` objects.
 #[derive(Debug)]
 pub enum Error {
   /// Indicates integer overflow.

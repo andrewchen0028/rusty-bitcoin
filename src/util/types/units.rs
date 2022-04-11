@@ -1,13 +1,13 @@
 use std::{fmt::Display, str::FromStr};
 
 /// Represents the unit of an amount.
-/// - ```nRBTC``` (nano)
-/// - ```uRBTC``` (micro)
-/// - ```mRBTC``` (milli)
-/// - ```RBTC``` (unit)
-/// - ```kRBTC``` (kilo)
-/// - ```MRBTC``` (mega)
-/// - ```GRBTC``` (giga)
+/// - `nRBTC` (nano)
+/// - `uRBTC` (micro)
+/// - `mRBTC` (milli)
+/// - `RBTC` (unit)
+/// - `kRBTC` (kilo)
+/// - `MRBTC` (mega)
+/// - `GRBTC` (giga)
 #[allow(non_camel_case_types)]
 #[derive(Debug)]
 pub enum Unit {
@@ -37,7 +37,7 @@ impl FromStr for Unit {
   }
 }
 
-/// The custom error type for a ```Unit```.
+/// The custom error type for a `Unit`.
 #[derive(Debug)]
 pub enum Error {
   /// Indicates an invalid unit.
