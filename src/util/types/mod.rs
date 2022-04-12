@@ -1,4 +1,6 @@
 pub mod addr;
 pub mod amount;
-pub mod tx;
+pub mod block;
+pub mod header;
+pub mod transaction;
 pub mod units;

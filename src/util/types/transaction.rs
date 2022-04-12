@@ -4,6 +4,6 @@ use serde::{Deserialize, Serialize};
 ///
 /// TODO: Make this actually contain data.
 #[derive(Deserialize, Serialize)]
-pub struct Tx {
-  x: String,
+pub struct Transaction {
+  pub x: String,
 }
