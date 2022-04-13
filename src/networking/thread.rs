@@ -5,7 +5,13 @@ use async_std::{
   task,
 };
 
-use crate::util::types::{block::Block, transaction::Transaction};
+use super::error::Error;
+use crate::util::{
+  constants::SHA256_HASH_SIZE,
+  types::{
+    amount::Amount, block::Block, transaction::Transaction, units::Unit,
+  },
+};
 
 /// # Networking thread
 /// Asynchronously handles the following tasks:
@@ -16,7 +22,7 @@ pub async fn start_networking(
   txns_from_miner: Receiver<Transaction>,
   blks_to_miner: Sender<Block>,
   txns_to_miner: Sender<Transaction>,
-) {
+) -> Result<(), Error> {
   // Spawn and await async tasks.
   let broadcast_blks_handle = task::spawn(broadcast_blks(blks_from_miner));
   let broadcast_txns_handle = task::spawn(broadcast_txns(txns_from_miner));
@@ -25,7 +31,8 @@ pub async fn start_networking(
   broadcast_blks_handle.await;
   broadcast_txns_handle.await;
   forward_blks_handle.await;
-  forward_txns_handle.await;
+  forward_txns_handle.await?;
+  Ok(())
 }
 
 /// Receive blocks from the mining thread and broadcast to the network.
@@ -59,9 +66,9 @@ const DELAY_MEDIUM: Duration = Duration::from_secs(4);
 /// Receive blocks from the network and forward to the mining thread.
 async fn forward_blks(blks_to_miner: Sender<Block>) {
   loop {
-    // Await incoming block from network.
+    // TODO: Await incoming block from network.
     thread::sleep(DELAY_MEDIUM);
-    let blk = Block::new(todo!(), todo!(), todo!());
+    let blk = Block::new(0, [0u8; SHA256_HASH_SIZE], Vec::new());
 
     // Forward incoming block to miner.
     match blks_to_miner.send(blk).await {
@@ -74,11 +81,11 @@ async fn forward_blks(blks_to_miner: Sender<Block>) {
 const DELAY_SHORT: Duration = Duration::from_millis(900);
 
 /// Receive transactions from the network and forward to the mining thread.
-async fn forward_txns(txns_to_miner: Sender<Transaction>) {
+async fn forward_txns(txns_to_miner: Sender<Transaction>) -> Result<(), Error> {
   loop {
     // Await transaction from network.
     thread::sleep(DELAY_SHORT);
-    let transaction = Transaction { x: String::from("tx") };
+    let transaction = Transaction::new(Amount::new(0.0, Unit::RBTC)?);
 
     // Forward transaction to miner.
     match txns_to_miner.send(transaction).await {
