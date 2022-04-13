@@ -61,7 +61,7 @@ async fn forward_blks(blks_to_miner: Sender<Block>) {
   loop {
     // Await incoming block from network.
     thread::sleep(DELAY_MEDIUM);
-    let blk = Block {};
+    let blk = Block::new(todo!(), todo!(), todo!());
 
     // Forward incoming block to miner.
     match blks_to_miner.send(blk).await {
