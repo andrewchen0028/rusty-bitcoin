@@ -4,7 +4,7 @@ use async_std::{channel, task};
 use rbtc::{
   mining::thread::start_mining,
   networking::thread::start_networking,
-  util::types::{block::Block, transaction::Transaction},
+  util::types::{block::Block, txn::Txn},
 };
 
 /// TODO: Rewrite or heavily scrutinize all files marked with "REWRITE".
@@ -12,8 +12,8 @@ fn main() {
   // Initialize inter-thread communication channels.
   let (blks_to_miner, blks_from_network) = channel::unbounded::<Block>();
   let (blks_to_network, blks_from_miner) = channel::unbounded::<Block>();
-  let (txns_to_miner, txns_from_network) = channel::unbounded::<Transaction>();
-  let (txns_to_network, txns_from_miner) = channel::unbounded::<Transaction>();
+  let (txns_to_miner, txns_from_network) = channel::unbounded::<Txn>();
+  let (txns_to_network, txns_from_miner) = channel::unbounded::<Txn>();
 
   // Spawn mining and networking threads.
   let mining_thread = thread::spawn(|| {

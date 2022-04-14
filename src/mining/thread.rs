@@ -12,7 +12,7 @@ use crate::{
   util::{
     constants::SHA256_HASH_SIZE,
     hashes::sha256,
-    types::{block::Block, transaction::Transaction},
+    types::{block::Block, txn::Txn},
   },
 };
 
@@ -21,9 +21,9 @@ use crate::{
 /// incoming transaction or block from networking thread.
 pub async fn start_mining(
   blks_from_network: Receiver<Block>,
-  txns_from_network: Receiver<Transaction>,
+  txns_from_network: Receiver<Txn>,
   blks_to_network: Sender<Block>,
-  txns_to_network: Sender<Transaction>,
+  txns_to_network: Sender<Txn>,
 ) {
   // Initialize block counter, hash target, and mempool.
   let mut block_count = 0;
@@ -35,8 +35,8 @@ pub async fn start_mining(
   // Mine a block or update the local chain.
   loop {
     // Initialize previous block hash, mempool and nonce.
-    let mut prev_block_hash = [0u8; SHA256_HASH_SIZE];
-    let mempool = Vec::new();
+    let mut _prev_block_hash = [0u8; SHA256_HASH_SIZE];
+    let mempool = Vec::<Txn>::new();
     let mut nonce: u32 = 0;
 
     // Concatenate mempool and nonce.
@@ -74,7 +74,7 @@ pub async fn start_mining(
           // TODO:
           // - Verify block before proceeding.
           // - Prune mempool against incoming block's transactions.
-          prev_block_hash = blk.hash();
+          _prev_block_hash = blk.hash();
         },
         Err(TryRecvError::Closed) => {
           println!("Channel blks_from_network closed unexpectedly");
@@ -93,7 +93,7 @@ pub async fn start_mining(
     }
 
     // Create block and send to networking thread.
-    let block = Block::new(nonce, prev_block_hash, mempool);
+    let block = Block::default();
     blks_to_network
       .send(block)
       .await

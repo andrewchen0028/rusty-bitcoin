@@ -59,6 +59,9 @@ pub const RIPEMD160_HASH_SIZE: usize = 20;
 /// The size of a SHA-256 hash, in bytes.
 pub const SHA256_HASH_SIZE: usize = 32;
 
+/// The initial mining target, in compressed `bits` form.
+pub const INTIIAL_TARGET_BITS: u32 = 0x1d00ffff;
+
 /// A network ID.
 pub enum NetworkID {
   /// The mainnet network ID (byte: 0x00).

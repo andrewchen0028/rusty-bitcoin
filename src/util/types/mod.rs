@@ -1,6 +1,7 @@
 pub mod addr;
-pub mod amount;
 pub mod block;
+pub mod chain;
 pub mod header;
-pub mod transaction;
-pub mod units;
+pub mod txi;
+pub mod txn;
+pub mod txo;
